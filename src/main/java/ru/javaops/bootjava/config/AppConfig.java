@@ -5,6 +5,7 @@ import org.h2.tools.Server;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 
 import java.sql.SQLException;
 
@@ -12,16 +13,15 @@ import java.sql.SQLException;
 @Slf4j
 @EnableCaching
 public class AppConfig {
-
-/*
+    /*
+        @Profile("!test")
+        @Bean(initMethod = "start", destroyMethod = "stop")
+        public Server h2WebServer() throws SQLException {
+            return Server.createWebServer("-web", "-webAllowOthers", "-webPort", "8082");
+        }
+    */
     @Bean(initMethod = "start", destroyMethod = "stop")
-    public Server h2WebServer() throws SQLException {
-        return Server.createWebServer("-web", "-webAllowOthers", "-webPort", "8082");
-    }
-*/
-//http://localhost:8080/h2-console/login.jsp?jsessionid=ff4b90a33bce823217a8e5e55f6abe78
-    @Bean(initMethod = "start", destroyMethod = "stop")
-    public Server h2Server() throws SQLException {
+    Server h2Server() throws SQLException {
         log.info("Start H2 TCP server");
         return Server.createTcpServer("-tcp", "-tcpAllowOthers", "-tcpPort", "9092");
     }
