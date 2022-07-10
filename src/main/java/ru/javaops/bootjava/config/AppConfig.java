@@ -1,13 +1,16 @@
 package ru.javaops.bootjava.config;
 
 import com.fasterxml.jackson.databind.Module;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.hibernate5.Hibernate5Module;
 import lombok.extern.slf4j.Slf4j;
 import org.h2.tools.Server;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+import ru.javaops.bootjava.util.JsonUtil;
 
 import java.sql.SQLException;
 
@@ -16,13 +19,8 @@ import java.sql.SQLException;
 @EnableCaching
 // TODO: cache only most requested data!
 public class AppConfig {
-    /*
-        @Profile("!test")
-        @Bean(initMethod = "start", destroyMethod = "stop")
-        public Server h2WebServer() throws SQLException {
-            return Server.createWebServer("-web", "-webAllowOthers", "-webPort", "8082");
-        }
-    */
+
+    @Profile("!test")
     @Bean(initMethod = "start", destroyMethod = "stop")
     Server h2Server() throws SQLException {
         log.info("Start H2 TCP server");
@@ -33,5 +31,10 @@ public class AppConfig {
     @Bean
     Module module() {
         return new Hibernate5Module();
+    }
+
+    @Autowired
+    private void storeObjectMapper(ObjectMapper objectMapper) {
+        JsonUtil.setMapper(objectMapper);
     }
 }
